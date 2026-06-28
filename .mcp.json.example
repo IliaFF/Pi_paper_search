@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "wiley-scholar-gateway": {
+      "type": "http",
+      "url": "https://connector.scholargateway.ai/mcp"
+    },
+    "papersflow": {
+      "transport": "http",
+      "url": "https://doxa.papersflow.ai/mcp"
+    },
+    "paper-search-scihub": {
+      "command": "REPO_ROOT/.pi/venvs/paper-search-mcp-git/bin/python",
+      "args": ["-m", "paper_search_mcp.server"],
+      "env": {
+        "PAPER_SEARCH_MCP_UNPAYWALL_EMAIL": "",
+        "PAPER_SEARCH_MCP_CORE_API_KEY": "",
+        "PAPER_SEARCH_MCP_SEMANTIC_SCHOLAR_API_KEY": "",
+        "PAPER_SEARCH_MCP_ZENODO_ACCESS_TOKEN": "",
+        "PAPER_SEARCH_MCP_GOOGLE_SCHOLAR_PROXY_URL": ""
+      }
+    }
+  }
+}

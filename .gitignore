@@ -1,0 +1,28 @@
+# Local Pi/agent state and secrets
+.pi/
+.mcp.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# LaTeX/build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Superseded generated PDFs
+review_ls_cp_flcb_theory.pdf
+review_ls_cp_flcb_theory_rendered.pdf

@@ -1,0 +1,232 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\geometry{left=22mm,right=22mm,top=20mm,bottom=22mm}
+\setmainfont{Times New Roman}[
+  Path = C:/Windows/Fonts/,
+  UprightFont = times.ttf,
+  BoldFont = timesbd.ttf,
+  ItalicFont = timesi.ttf,
+  BoldItalicFont = timesbi.ttf
+]
+\setsansfont{Arial}[
+  Path = C:/Windows/Fonts/,
+  UprightFont = arial.ttf,
+  BoldFont = arialbd.ttf,
+  ItalicFont = ariali.ttf,
+  BoldItalicFont = arialbi.ttf
+]
+\setmonofont{Consolas}[
+  Path = C:/Windows/Fonts/,
+  UprightFont = consola.ttf,
+  BoldFont = consolab.ttf,
+  ItalicFont = consolai.ttf,
+  BoldItalicFont = consolaz.ttf
+]
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\newcommand{\code}[1]{\texttt{#1}}
+\title{Жесткая рецензия на \texttt{ls\_cp\_flcb\_theory.ipynb}}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Файл:} \texttt{D:\textbackslash Work\_Projects\textbackslash search\_agent\textbackslash ls\_cp\_flcb\_theory.ipynb}\\
+\textbf{Объект рецензии:} теоретический ноутбук с постановкой алгоритма LS-CP-FLCB (\emph{Lipschitz-Shared Constrained Pareto Functional Lower Confidence Bound}).\\
+\textbf{Рекомендация:} \textbf{Reject / непригодно как теоретическая основа в текущем виде.}
+
+\section*{Executive summary}
+
+Документ выглядит как предварительный концептуальный набросок, а не как доказанная теория алгоритма. Он задает понятную нотацию и содержит несколько элементарных лемм о липшицевости скаляризации, но не доказывает главный заявленный результат: что предложенная стратегия выборки за конечный бюджет восстанавливает ограниченный Парето-фронт с заданной вероятностью и контролируемой ошибкой.
+
+Ключевая теорема об аппроксимации фронта фактически следует из предположения A6, которое уже содержит требуемый результат. Статистическая часть сведена к недоказанному благоприятному событию A4. Ограничения почти не получают самостоятельной обработки, несмотря на слово \emph{Constrained} в названии алгоритма. Заявленная sample complexity не является сложностью алгоритма, а лишь локальным достаточным условием при уже удачном распределении запусков.
+
+\section*{Оценки}
+
+\begin{center}
+\begin{tabular}{|p{0.16\textwidth}|p{0.11\textwidth}|p{0.62\textwidth}|}
+\hline
+Критерий & Оценка & Комментарий \\
+\hline
+Novelty & 2/5 & Идея shared information потенциально интересна, но не отделена от известных подходов. \\
+\hline
+Rigor & 1/5 & Главные гарантии постулируются или доказываются через предположения. \\
+\hline
+Impact & 2/5 & Возможен исследовательский задел, но текущий текст не является вкладом. \\
+\hline
+Clarity & 3/5 & Текст читаемый, но сложные места вынесены в предположения. \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Центральная теорема об аппроксимации фронта фактически пустая}
+
+В разделах 29--31 вводится предположение A6: если для всех направлений сетки найдены $\varepsilon$-оптимальные допустимые точки, то они дают аппроксимацию истинного фронта. Затем Теорема 3 доказывает ровно это же. Это не результат алгоритма, а переформулировка предположения.
+
+\textbf{Проблема.} A6 содержит всю сложность задачи: связь скаляризации Чебышева, сетки направлений, геометрии Парето-фронта и ошибки покрытия. Без явных условий на фронт, достижимость, регулярность, форму множества значений и константы $\zeta$, $\psi$ теорема не несет самостоятельного содержания.
+
+\textbf{Что нужно исправить.} Необходимо заменить A6 на проверяемые геометрические условия и вывести $\zeta(\eta)$ и $\psi(\varepsilon_s)$ явно. Иначе Теорема 3 должна быть честно названа условным наблюдением, а не теоремой аппроксимации Парето-фронта.
+
+\textbf{Литературный контекст.} В multi-objective sequential decision-making известно, что тип скаляризации и форма допустимого множества определяют, какие части Парето-фронта восстанавливаются; см. Roijers et al., JAIR 2013, DOI \texttt{10.1613/jair.3987}.
+
+\section{Алгоритм не доказывает достижение $\varepsilon$-оптимальности по всем направлениям}
+
+Теорема 3 начинается с условия
+\[
+ s_{\lambda_\ell}(\hat y_\ell) \le \phi_\ell^\star + \varepsilon_s
+\]
+для каждого направления. Но в алгоритме нет доказательства, что правило выбора направления и ручки приводит к выполнению этого условия за бюджет $T$.
+
+\textbf{Отсутствуют:}
+\begin{itemize}
+    \item stopping rule;
+    \item sample complexity для покрытия всех направлений;
+    \item связь между $T$, $\delta$, $\varepsilon_s$, числом направлений $L$, числом ручек $K$;
+    \item доказательство, что активные ячейки не будут преждевременно исчерпаны;
+    \item PAC-гарантия для найденного фронта.
+\end{itemize}
+
+\textbf{Критический вывод.} Основной результат начинается после того, как вся трудная часть уже предполагается выполненной.
+
+\textbf{Сравнение.} Crépon, Garivier, Koolen (2025), \emph{Sequential Learning of the Pareto Front for Multi-objective Bandits}, arXiv \texttt{2501.17513}, формулируют корректность ответа с вероятностью $1-\delta$ и обсуждают sample complexity. Здесь аналогичного результата нет.
+
+\section{Доверительные интервалы объявлены, но не выведены}
+
+В A4 постулируется
+\[
+L_{i,\ell}^{\mathrm{loc}}(t) \le \phi_{i,\ell}^{\star} \le U_{i,\ell}^{\mathrm{loc}}(t)
+\]
+для всех $i$, $\ell$, $t$ с вероятностью не меньше $1-\delta$.
+
+Это центральное статистическое утверждение, но оно не доказано. Более того, не определены:
+\begin{itemize}
+    \item шумовая модель для $Y_i(x)$ и $C_i(x)$;
+    \item что именно наблюдается: истинные цели или шумные оценки;
+    \item как обрабатываются ограничения;
+    \item как внутренний оптимизатор возвращает допустимую точку;
+    \item является ли $\hat\phi$ несмещенной или состоятельной оценкой;
+    \item как учитывается adaptive sampling;
+    \item почему union bound по всем $t$ корректен;
+    \item почему радиус зависит от $n_{i,\ell}$, если наблюдения заявлены как shared между направлениями.
+\end{itemize}
+
+\textbf{Критический вывод.} A4 --- это не техническая деталь, а ядро всей статистической гарантии. В текущем тексте оно заменено декларацией.
+
+\textbf{Сравнение.} Dorn et al. (2025), \emph{Functional multi-armed bandit and the best function identification problems}, arXiv \texttt{2503.00509}, строят F-LCB через редукцию к оптимизаторам с известной скоростью сходимости. В ноутбуке эта связка заменена предположениями A3--A4.
+
+\section{Ограничения почти не анализируются}
+
+Название алгоритма содержит \textbf{Constrained}, но теория ограничений фактически отсутствует. Допустимость задается как
+\[
+C_i(x) \le B,
+\]
+но дальше доверительные оценки строятся только для скаляризованной цели $\phi$. Нет нижних/верхних доверительных границ для ограничений, нет вероятностной гарантии безопасной допустимости, нет обработки случаев ложной допустимости из-за шума.
+
+Метрика \code{unsafe pull rate} появляется только в конце как рекомендуемая экспериментальная метрика, но в теории алгоритм никак ее не контролирует.
+
+\textbf{Критический вывод.} Слово \emph{Constrained} в названии алгоритма сейчас в основном декоративное. Чтобы оно было содержательным, нужны отдельные confidence bounds для ограничений и гарантия вида
+\[
+\mathbb{P}\{C_i(x_t) \le B\} \ge 1-\delta
+\]
+или контролируемая вероятность нарушения.
+
+\section{Правило исключения не связано напрямую с восстановлением Парето-фронта}
+
+Теорема 1 говорит: если ячейка $(i,\ell)$ $\varepsilon$-оптимальна в скаляризованной задаче, она не будет исключена. Но заявленная цель --- восстановление Парето-фронта, а не множества $\varepsilon$-оптимальных arm-direction ячеек. Не доказано, что сохранение таких ячеек достаточно для покрытия фронта. Не доказано и обратное: что удаляемые ячейки не содержат точки, нужные для хорошего hypervolume или IGD.
+
+\textbf{Проблема.} Скаляризованная оптимальность по конечной сетке направлений --- это суррогат, а не сама целевая гарантия.
+
+\textbf{Что нужно исправить.} Нужно явно связать правило исключения с потерей по IGD/HV или Hausdorff distance между истинным и найденным фронтом.
+
+\section{Теорема 2 является почти тавтологией}
+
+Теорема 2 вводит ошибки
+\[
+\omega_{i,\ell}(t)=\phi_{i,\ell}^{\star}-L_{i,\ell}^{\mathrm{sh}}(t),
+\]
+\[
+\omega_{\star,\ell}(t)=U_{j^{\star},\ell}^{\mathrm{sh}}(t)-\phi_\ell^{\star},
+\]
+и утверждает, что если сумма ошибок меньше зазора, то ячейка исключается.
+
+Это алгебраическое переписывание правила исключения, а не самостоятельный результат. Оно не дает оценки, когда условие выполнится, потому что нет доказанной динамики у $\omega(t)$.
+
+\textbf{Что нужно.} Нужен bound на $\omega(t)$ через число запусков, шум, качество оптимизатора, плотность направлений и adaptive allocation. Сейчас этого нет.
+
+\section{Sample complexity в разделе 28 не является sample complexity алгоритма}
+
+Следствие в разделе 28 говорит: если есть соседнее направление $m$, и если там уже накоплено достаточно запусков, то этого достаточно. Но это условное утверждение. Оно не доказывает, что алгоритм выберет это направление, накопит там $n$, не потратит бюджет на нерелевантные ячейки и сделает это за заявленный $T$.
+
+\textbf{Критика.} Это не sample complexity алгоритма, а локальное достаточное условие при уже случившемся хорошем распределении сэмплов.
+
+\section{Hypervolume bound необоснован}
+
+В разделе 33 заявлено
+\[
+HV(P^{\star})-HV(\hat P) \le D R^{D-1}\eta_{\mathrm{front}}.
+\]
+
+Для такой оценки нужны аккуратные условия: ориентация минимизации, reference point, включение множеств доминирования, bounded box, отношение между Hausdorff/covering distance и hypervolume difference. В тексте это не доказано.
+
+Более того, покрытие истинного фронта найденными точками в норме $\ell_{\infty}$ само по себе не всегда немедленно дает такую простую оценку без дополнительных геометрических условий.
+
+\textbf{Литературный контекст.} Hypervolume как метрика чувствительна к reference point и геометрии множества; см. Zitzler \& Thiele 1999 и Daulton et al. 2020, NeurIPS, qEHVI.
+
+\section{Недостающая литература}
+
+Список литературы слишком короткий и плохо закрывает заявленную область. Нужны как минимум следующие блоки.
+
+\subsection*{Multi-objective sequential decision-making / scalarization}
+\begin{itemize}
+    \item Roijers D. M., Vamplew P., Whiteson S., Dazeley R. \emph{A Survey of Multi-Objective Sequential Decision-Making}. JAIR, 2013. DOI: \texttt{10.1613/jair.3987}.
+    \item Hayes C. F. et al. \emph{A practical guide to multi-objective reinforcement learning and planning}. Autonomous Agents and Multi-Agent Systems, 2022. DOI: \texttt{10.1007/s10458-022-09552-y}.
+\end{itemize}
+
+\subsection*{Sequential Pareto front learning}
+\begin{itemize}
+    \item Crépon E., Garivier A., Koolen W. M. \emph{Sequential Learning of the Pareto Front for Multi-objective Bandits}. arXiv: \texttt{2501.17513}, 2025.
+\end{itemize}
+
+\subsection*{Functional / black-box bandits}
+\begin{itemize}
+    \item Dorn Y., Katrutsa A., Latypov I., Soboleva A. \emph{Functional multi-armed bandit and the best function identification problems}. arXiv: \texttt{2503.00509}, 2025.
+    \item Kleinberg R., Slivkins A., Upfal E. \emph{Multi-Armed Bandits in Metric Spaces}. arXiv: \texttt{0809.4882}, 2008.
+    \item Bubeck S., Munos R., Stoltz G., Szepesvári C. \emph{X-armed bandits}. JMLR, 2011.
+\end{itemize}
+
+\subsection*{Bayesian / black-box multi-objective optimization}
+\begin{itemize}
+    \item Daulton S., Balandat M., Bakshy E. \emph{Differentiable Expected Hypervolume Improvement for Parallel Multi-Objective Bayesian Optimization}. NeurIPS, 2020.
+    \item Daulton S., Eriksson D., Balandat M., Bakshy E. \emph{Multi-Objective Bayesian Optimization over High-Dimensional Search Spaces}. arXiv: \texttt{2109.10964}, 2021.
+\end{itemize}
+
+\subsection*{GP-UCB / expensive black-box optimization}
+\begin{itemize}
+    \item Srinivas N., Krause A., Kakade S. M., Seeger M. \emph{Information-Theoretic Regret Bounds for Gaussian Process Optimization in the Bandit Setting}. IEEE Transactions on Information Theory, 2012. DOI: \texttt{10.1109/TIT.2011.2182033}.
+\end{itemize}
+
+\section{Что нужно сделать, чтобы работа стала защищаемой}
+
+\begin{enumerate}
+    \item Сформулировать точную статистическую модель: шум целей, шум ограничений, наблюдения, adaptive sampling.
+    \item Вывести локальные confidence bounds, а не постулировать A4.
+    \item Дать отдельную теорию для ограничений: feasible classification, safe sampling или probabilistic feasibility.
+    \item Доказать, что правило выбора направлений и ручек обеспечивает достижение $\varepsilon_s$-оптимальности по всем нужным направлениям за конечный бюджет.
+    \item Заменить A6 на проверяемые геометрические условия Парето-фронта.
+    \item Вывести явные $\zeta(\eta)$ и $\psi(\varepsilon_s)$.
+    \item Доказать связь между ошибками скаляризованных задач и IGD/HV-gap.
+    \item Провести сравнение с independent-direction baseline, MOBO baseline и sequential Pareto-front learning baseline.
+    \item Показать ablation: без Lipschitz sharing / с sharing / с разной плотностью сетки направлений.
+    \item Убрать из текста утверждения уровня «алгоритм вменяем» и заменить их проверяемыми теоретическими или экспериментальными claims.
+\end{enumerate}
+
+\section*{Финальная формулировка рецензии}
+
+Представленный ноутбук не демонстрирует корректную теорию алгоритма LS-CP-FLCB. Он задает разумную нотацию и несколько элементарных лемм о липшицевости скаляризации, но не доказывает главного: что предложенная стратегия выборки за конечный бюджет восстанавливает ограниченный Парето-фронт с заданной вероятностью и контролируемой ошибкой. Центральная теорема об аппроксимации фронта является следствием предположения A6, которое фактически уже содержит требуемый результат. Статистическая часть сведена к недоказанному благоприятному событию A4, ограничения не получают самостоятельной доверительной обработки, а заявленная sample complexity не является сложностью алгоритма. В текущем виде работа должна рассматриваться как предварительный концептуальный набросок, а не как теоретически обоснованный метод.
+
+\end{document}
