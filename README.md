@@ -80,6 +80,12 @@ bash scripts/setup.sh
 bash scripts/test_mcp.sh
 ```
 
+Если видите `hypa: command not found`, выполните:
+
+```bash
+bash scripts/fix_hypa_path.sh
+```
+
 Ожидаемый результат: сообщение вида
 
 ```text
