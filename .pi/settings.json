@@ -1,0 +1,13 @@
+{
+  "packages": [
+    "npm:pi-subagents",
+    "npm:pi-mcp-adapter",
+    "npm:context-mode",
+    "npm:@ff-labs/pi-fff",
+    "npm:@hypabolic/pi-hypa",
+    "npm:pi-web-access",
+    "npm:@narumitw/pi-codex-usage"
+  ],
+  "hideThinkingBlock": true,
+  "theme": "dark"
+}

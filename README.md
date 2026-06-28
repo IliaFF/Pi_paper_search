@@ -115,3 +115,7 @@ XELATEX="/mnt/d/Miktex/miktex/bin/x64/xelatex.exe" bash scripts/build_review_pdf
 3. Запустить `bash scripts/test_mcp.sh`.
 4. Перезапустить Pi/agent.
 5. При первом использовании Wiley/PapersFlow пройти OAuth.
+
+## Перенос на VPS / чистый Pi
+
+Подробная инструкция для чистого VPS: [`VPS_SETUP.md`](VPS_SETUP.md).

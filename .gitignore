@@ -1,5 +1,6 @@
 # Local Pi/agent state and secrets
-.pi/
+.pi/*
+!.pi/settings.json
 .mcp.json
 
 # Python
