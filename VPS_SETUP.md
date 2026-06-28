@@ -67,6 +67,7 @@ cd Pi_paper_search
 
 ```bash
 pi install -l npm:pi-subagents
+pi install -l git:github.com/IliaFF/co-researcher
 pi install -l npm:pi-mcp-adapter
 pi install -l npm:context-mode
 pi install -l npm:@ff-labs/pi-fff
@@ -77,6 +78,7 @@ pi install -l npm:@narumitw/pi-codex-usage
 
 Что это дает:
 
+- `co-researcher` — академические skills: literature-review, peer-review, critical-analysis, systematic-review, research-synthesis и др.;
 - `pi-mcp-adapter` — MCP-инструменты внутри Pi;
 - `pi-web-access` — web search/fetch для исследований;
 - `context-mode` — обработка больших выводов/логов без засорения контекста;

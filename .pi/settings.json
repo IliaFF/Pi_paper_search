@@ -1,6 +1,7 @@
 {
   "packages": [
     "npm:pi-subagents",
+    "git:github.com/IliaFF/co-researcher",
     "npm:pi-mcp-adapter",
     "npm:context-mode",
     "npm:@ff-labs/pi-fff",

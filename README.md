@@ -5,11 +5,23 @@
 ## Что входит
 
 - `agent.md` — инструкции агента для академического поиска, литобзора и рецензирования.
+- `.pi/settings.json` — проектные Pi-пакеты, включая Co-Researcher skills.
 - `.mcp.json.example` — шаблон MCP-конфигурации.
 - `scripts/setup.sh` — автоматическая установка локального MCP `paper-search-scihub`.
 - `scripts/test_mcp.sh` — проверка, что MCP-сервер запускается и отдает нужные tools.
 - `scripts/build_review_pdf.sh` — сборка PDF-рецензии через XeLaTeX.
 - `review_ls_cp_flcb_theory_latex.tex` / `.pdf` — пример жесткой рецензии с нормальными LaTeX-формулами.
+
+## Pi skills / packages
+
+Проектная конфигурация `.pi/settings.json` подключает стандартные расширения Pi и Co-Researcher:
+
+- `git:github.com/IliaFF/co-researcher` — research skills: literature-review, peer-review, critical-analysis, systematic-review, research-synthesis и др.;
+- `pi-mcp-adapter` — MCP tools;
+- `pi-web-access` — web search/fetch;
+- `context-mode`, `pi-subagents`, `pi-fff`, `pi-hypa`.
+
+При запуске Pi в доверенном проекте пакеты должны подтянуться автоматически. Вручную: `pi install -l git:github.com/IliaFF/co-researcher`.
 
 ## MCP-серверы
 
